@@ -1,0 +1,209 @@
+# i3 config file (v4)
+# https://i3wm.org/docs/userguide.html
+
+###################
+##### General #####
+###################
+
+# modifier keys
+set $alt Mod1
+set $mod Mod4
+
+# workspace names
+set $ws1   "1: 壹"
+set $ws2   "2: 贰"
+set $ws3   "3: 叁"
+set $ws4   "4: 肆"
+set $ws5   "5: 伍"
+set $ws6   "6: 陆"
+set $ws7   "7: 柒"
+set $ws8   "8: 捌"
+set $ws9   "9: 玖"
+set $ws10 "10: 拾"
+
+# auto-start script
+exec --no-startup-id exec ~/.config/i3/autostart
+
+########################
+##### Window rules #####
+########################
+
+for_window [class="KeePassXC"] floating enable
+for_window [class="Minecraft Launcher"] floating enable
+for_window [class="steam"] floating enable
+for_window [class="Virt-manager" title="Virtual Machine Manager"] floating enable
+for_window [class="Float.+"] floating enable
+
+########################
+##### Key bindings #####
+########################
+
+# use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+# move tiling windows via drag & drop by left-clicking into the title bar,
+# or left-clicking anywhere into the window while holding the floating modifier
+tiling_drag modifier titlebar
+
+### fn keys ###
+
+bindsym XF86AudioRaiseVolume  exec --no-startup-id exec pactl set-sink-volume @DEFAULT_SINK@ +10%
+bindsym XF86AudioLowerVolume  exec --no-startup-id exec pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym XF86AudioMute         exec --no-startup-id exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute      exec --no-startup-id exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86MonBrightnessUp   exec --no-startup-id exec backlight +10
+bindsym XF86MonBrightnessDown exec --no-startup-id exec backlight -10
+
+### programs ###
+
+# file explorer
+bindsym $mod+Shift+e    exec --no-startup-id exec alacritty -e nnn
+# web browser
+bindsym $mod+Shift+b    exec exec firefox
+# terminal emulator
+bindsym $mod+Return     exec --no-startup-id exec alacritty
+bindsym $mod+$alt+Return exec --no-startup-id "exec alacritty --class Alacritty,FloatTerm"
+# program launcher
+bindsym $mod+backslash  exec --no-startup-id exec rofi -no-plugins -modes drun -show drun
+# find window
+bindsym $mod+w          exec --no-startup-id exec rofi -no-plugins -modes window -show window
+# clipboard
+bindsym $mod+v          exec --no-startup-id exec ~/.config/i3/tools/clipboard.sh select
+# tool menu
+bindsym $mod+apostrophe exec --no-startup-id exec ~/.config/i3/tools/toolmenu.sh
+
+# kill focused window
+bindsym $mod+$alt+q       kill
+# quit the wm
+bindsym $mod+$alt+Shift+q exec "i3-nagbar -t warning -m 'Exit i3-wm?' -B 'Yes' 'i3-msg exit'"
+# reload the configuration file
+bindsym $mod+$alt+Shift+r reload
+
+### workspaces ###
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+bindsym $mod+Tab          workspace back_and_forth
+bindsym $mod+bracketleft  workspace prev_on_output
+bindsym $mod+bracketright workspace next_on_output
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# move focused workspace to other monitor
+mode "move workspace" {
+    bindsym h move workspace to output left; mode "default"
+    bindsym j move workspace to output down; mode "default"
+    bindsym k move workspace to output up; mode "default"
+    bindsym l move workspace to output right; mode "default"
+    bindsym Left  move workspace to output left; mode "default"
+    bindsym Down  move workspace to output down; mode "default"
+    bindsym Up    move workspace to output up; mode "default"
+    bindsym Right move workspace to output right; mode "default"
+
+    bindsym Escape mode "default"
+}
+bindsym $mod+Shift+w mode "move workspace"
+
+### window & container ###
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+
+# resize window
+mode "resize" {
+    bindsym h resize shrink width  10 px or 10 ppt
+    bindsym j resize grow   height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow   width  10 px or 10 ppt
+    bindsym Left  resize shrink width  10 px or 10 ppt
+    bindsym Down  resize grow   height 10 px or 10 ppt
+    bindsym Up    resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow   width  10 px or 10 ppt
+
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# focus the parent container
+bindsym $mod+c focus parent
+# focus the child container
+bindsym $mod+Shift+c focus child
+# change focus between tiling / floating windows
+bindsym $mod+$alt+f focus mode_toggle
+
+### layouts ###
+
+# split in horizontal orientation
+bindsym $mod+$alt+h split h
+# split in vertical orientation
+bindsym $mod+$alt+v split v
+
+# change container layout
+#bindsym $mod+s layout stacking
+bindsym $mod+t layout tabbed
+#bindsym $mod+Shift+s layout toggle split
+bindsym $mod+s layout splith
+
+# enter fullscreen mode for the focused container
+bindsym $mod+Shift+f fullscreen toggle
+# toggle tiling / floating
+bindsym $mod+f floating toggle
+
+######################
+##### Appearance #####
+######################
+
+# font
+font pango:sans 1
+
+# colors
+client.focused           #b4befe #1e1e2e #cdd6f4 #f5e0dc #b4befe
+client.focused_inactive  #6c7086 #1e1e2e #cdd6f4 #f5e0dc #6c7086
+client.unfocused         #6c7086 #1e1e2e #cdd6f4 #f5e0dc #6c7086
+client.urgent            #fab387 #1e1e2e #fab387 #6c7086 #fab387
+client.placeholder       #6c7086 #1e1e2e #cdd6f4 #6c7086 #6c7086
+
+# gaps
+gaps inner 8
+gaps outer 4
+smart_gaps on
+
+# window border
+default_border pixel 2
+#hide_edge_borders smart
+smart_borders on

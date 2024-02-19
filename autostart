@@ -1,0 +1,29 @@
+#!/bin/bash
+
+THIS_DIR=$(dirname $(readlink -f "$0"))
+NICE_RUN='nice -18'
+
+## Xorg compositor
+$THIS_DIR/tools/compositor.sh start
+
+## Wallpapers
+$NICE_RUN "$THIS_DIR/tools/wallpaper.sh" & disown
+
+## Status bar
+killall -q polybar
+$NICE_RUN polybar --config="$THIS_DIR/polybar.ini" --quiet main & disown
+
+## Notifications
+$NICE_RUN dunst -config "$THIS_DIR/dunstrc" & disown
+
+## Clipboard manager
+$NICE_RUN "$THIS_DIR/tools/clipboard.sh" daemon & disown
+
+## Screen locker
+$NICE_RUN "$THIS_DIR/tools/lockscr.sh" daemon & disown
+
+## Input method
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+fcitx5 -r -d --verbose default=0 > /dev/null 2>&1
